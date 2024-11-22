@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: dicom_project_db
+    environment:
+      POSTGRES_USER: dicom_user
+      POSTGRES_PASSWORD: dicom_password
+      POSTGRES_DB: dicom_metadata
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - dicom_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dicom_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: dicom_minio
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: dicomadmin
+      MINIO_ROOT_PASSWORD: dicomadmin123
+    ports:
+      - "9000:9000" # API доступа MinIO
+      - "9001:9001" # Консоль MinIO
+    volumes:
+      - minio_data:/data
+    networks:
+      - dicom_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:
+  minio_data:
+
+networks:
+  dicom_network:
