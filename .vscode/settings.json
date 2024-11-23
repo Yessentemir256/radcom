@@ -3,12 +3,12 @@
         {
             "previewLimit": 50,
             "server": "localhost",
-            "port": 5432,
+            "port": 5433,
             "driver": "PostgreSQL",
-            "password": "dicom_password",
             "name": "dicom_project_db",
-            "database": "db",
-            "username": "app"
+            "username": "dicom_user",
+            "password": "dicom_password",
+            "database": "dicom_metadata"
         }
     ]
 }

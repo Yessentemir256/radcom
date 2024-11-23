@@ -1,13 +1,29 @@
+-- Создание таблицы врачей
+CREATE TABLE doctors (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL, -- зашифрованный пароль
+    specialization VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Создание таблицы пациентов
+CREATE TABLE patients (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    date_of_birth DATE NOT NULL,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),
+    doctor_id INT REFERENCES doctors(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Таблица для хранения DICOM-файлов
 CREATE TABLE dicom_files (
-    id SERIAL PRIMARY KEY,                -- Уникальный идентификатор файла
-    patient_id TEXT NOT NULL,             -- Идентификатор пациента
-    patient_name TEXT NOT NULL,           -- Имя пациента
-    study_instance_uid TEXT NOT NULL,     -- Уникальный идентификатор исследования
-    series_instance_uid TEXT,             -- Уникальный идентификатор серии
-    sop_instance_uid TEXT NOT NULL,       -- Уникальный идентификатор объекта (DICOM SOP Instance)
-    modality TEXT,                        -- Модальность (например, CT, MR)
-    study_date DATE,                      -- Дата исследования
-    description TEXT,                     -- Описание файла или исследования
-    dicom_file_path TEXT NOT NULL,        -- Путь к файлу на диске (например, C:\dicom_files\file.dcm)
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Время загрузки файла
+    id SERIAL PRIMARY KEY,
+    patient_id INT NOT NULL REFERENCES patients(id) ON DELETE CASCADE,
+    file_name VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL,
+    file_size BIGINT,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
