@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "password": "dicom_password",
+            "name": "dicom_project_db",
+            "database": "db",
+            "username": "app"
+        }
+    ]
+}
